@@ -19,8 +19,6 @@ const corsOptions = {
   optionsSuccessStatus: 204, // cho preflight trả về 204 thay vì 200
 };
 app.use(cors(corsOptions));
-// bắt OPTIONS riêng (preflight) để đảm bảo có header CORS và status 204
-app.options("*", cors(corsOptions));
 
 // 2. Sau khi CORS, bỏ qua redirect cho preflight, chỉ redirect với request thực thụ
 app.use((req, res, next) => {
