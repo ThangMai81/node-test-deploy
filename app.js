@@ -12,16 +12,19 @@ const helmet = require("helmet");
 const compression = require("compression");
 require("dotenv").config();
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  })
-);
+const corsOptions = {
+  origin: "http://localhost:3000",
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  optionsSuccessStatus: 204, // cho preflight trả về 204 thay vì 200
+};
+app.use(cors(corsOptions));
+// bắt OPTIONS riêng (preflight) để đảm bảo có header CORS và status 204
+app.options("*", cors(corsOptions));
 
+// 2. Sau khi CORS, bỏ qua redirect cho preflight, chỉ redirect với request thực thụ
 app.use((req, res, next) => {
   if (req.method === "OPTIONS") {
-    // preflight request, bỏ qua redirect
     return next();
   }
   if (req.headers["x-forwarded-proto"] !== "https") {
