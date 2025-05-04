@@ -11,7 +11,11 @@ const { v4: uuidv4 } = require("uuid");
 const helmet = require("helmet");
 const compression = require("compression");
 require("dotenv").config();
-// app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
