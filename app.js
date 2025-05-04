@@ -11,11 +11,24 @@ const { v4: uuidv4 } = require("uuid");
 const helmet = require("helmet");
 const compression = require("compression");
 require("dotenv").config();
+
 app.use(
   cors({
     origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   })
 );
+
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    // preflight request, bỏ qua redirect
+    return next();
+  }
+  if (req.headers["x-forwarded-proto"] !== "https") {
+    return res.redirect("https://" + req.headers.host + req.url);
+  }
+  next();
+});
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
